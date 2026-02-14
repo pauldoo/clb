@@ -1,0 +1,19 @@
+FROM fedora:latest
+RUN dnf install -y \
+  bc \
+  bison \
+  diffutils \
+  dwarves \
+  elfutils-devel \
+  flex \
+  gcc \
+  git \
+  hostname \
+  make \
+  openssl \
+  openssl-devel \
+  perl \
+  python3 \
+  rpm-build \
+  rsync
+

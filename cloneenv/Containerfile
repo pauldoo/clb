@@ -1,0 +1,4 @@
+FROM clb_buildenv
+RUN ls -la /host-repo/
+RUN git clone --local --no-hardlinks --no-checkout /host-repo /src
+WORKDIR /src

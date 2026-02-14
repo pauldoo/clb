@@ -1,0 +1,9 @@
+FROM clb_cloneenv
+ARG BASE_COMMIT
+
+RUN git fetch origin
+RUN git branch -av
+RUN git checkout ${BASE_COMMIT}
+
+COPY ./kernel.config /src/.config
+RUN make olddefconfig
