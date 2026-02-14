@@ -5,15 +5,18 @@ RUN dnf install -y \
   diffutils \
   dwarves \
   elfutils-devel \
+  fish \
   flex \
   gcc \
   git \
   hostname \
   make \
+  micro \
   openssl \
   openssl-devel \
   perl \
   python3 \
   rpm-build \
-  rsync
+  rsync \
+  tmux
 

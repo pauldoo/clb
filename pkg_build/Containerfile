@@ -1,0 +1,10 @@
+ARG BASE_COMMIT
+FROM clb_base_build_${BASE_COMMIT}
+RUN git fetch origin
+RUN git status
+ARG TARGET_COMMIT
+RUN git checkout ${TARGET_COMMIT}
+RUN git status
+RUN make -j8 all
+RUN make -j8 binrpm-pkg
+

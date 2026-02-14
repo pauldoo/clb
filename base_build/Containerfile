@@ -1,4 +1,3 @@
 ARG BASE_COMMIT
 FROM clb_base_configured_${BASE_COMMIT}
-RUN nice make -j8 vmlinux
-RUN nice make -j8 modules
+RUN make -j8 all

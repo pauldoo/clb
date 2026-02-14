@@ -5,5 +5,9 @@ RUN git fetch origin
 RUN git branch -av
 RUN git checkout ${BASE_COMMIT}
 
-COPY ./kernel.config /src/.config
-RUN make olddefconfig
+#COPY ./kernel.config /src/.config
+RUN make defconfig && \
+  make kvm_guest.config && \
+  ./scripts/config --module CONFIG_BTRFS_FS && \
+  make olddefconfig
+
