@@ -5,6 +5,5 @@ RUN git status
 ARG TARGET_COMMIT
 RUN git checkout ${TARGET_COMMIT}
 RUN git status
-RUN make -j8 all
-RUN make -j8 binrpm-pkg
+RUN make -j$(($(nproc) - 1)) binrpm-pkg
 

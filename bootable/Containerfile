@@ -1,0 +1,6 @@
+FROM clb_bootable_base
+
+ARG TARGET_COMMIT
+COPY --from=clb_pkg_build_${TARGET_COMMIT} /src/rpmbuild/RPMS/**/*.rpm /project/
+WORKDIR /project
+RUN dnf install -y kernel*.rpm

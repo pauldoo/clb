@@ -41,9 +41,19 @@ pkg_build base_commit target_commit: (base_build base_commit)
         --security-opt label=disable \
         --volume {{justfile_directory()}}/linux/.git:/host-repo:ro
 
-copy-host-config:
-    cp -v /usr/src/kernels/*/.config ./base_configured/kernel.config
-    sed -i '/CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE/c\# CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE is not set' ./base_configured/kernel.config
-    sed -i '/CONFIG_CC_OPTIMIZE_FOR_SIZE/c\CONFIG_CC_OPTIMIZE_FOR_SIZE=y' ./base_configured/kernel.config
-    sed -i '/CONFIG_EFI_SBAT=/c\CONFIG_EFI_SBAT=n' ./base_configured/kernel.config
-    sed -i '/CONFIG_EFI_SBAT_FILE=/c\# CONFIG_EFI_SBAT_FILE is not set' ./base_configured/kernel.config
+bootable base_commit target_commit: (pkg_build base_commit target_commit) bootable_base
+    podman image exists clb_bootable_{{target_commit}} || \
+    podman build bootable \
+        --tag clb_bootable_{{target_commit}} \
+        --build-arg TARGET_COMMIT={{target_commit}} \
+
+run base_commit target_commit: (bootable base_commit target_commit)
+    bcvk ephemeral run-ssh clb_bootable_{{target_commit}}
+
+run_debug base_commit target_commit:
+    bcvk ephemeral run --console clb_bootable_{{target_commit}}
+
+bootable_base:
+    podman image exists clb_bootable_base || \
+    podman build bootable_base \
+        --tag clb_bootable_base \

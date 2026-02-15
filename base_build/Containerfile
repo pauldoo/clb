@@ -1,3 +1,3 @@
 ARG BASE_COMMIT
 FROM clb_base_configured_${BASE_COMMIT}
-RUN make -j8 all
+RUN make -j$(($(nproc) - 1)) all

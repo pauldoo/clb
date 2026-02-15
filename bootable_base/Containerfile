@@ -1,0 +1,20 @@
+FROM quay.io/fedora/fedora-bootc:latest
+
+# Workaround...
+# "05-rpmostree.install" runs before depmod, then fails because
+# modules.dep hasn't been created.
+RUN ln -s \
+  /usr/lib/kernel/install.d/50-depmod.install \
+  /usr/lib/kernel/install.d/01-depmod.install
+
+# bcvk complains if there are multiple kernels, so remove the standard one.
+RUN dnf remove -y \
+  kernel \
+  kernel-core \
+  kernel-modules \
+  kernel-modules-core
+
+RUN dnf install -y \
+  micro \
+  tmux \
+  screen

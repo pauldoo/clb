@@ -5,9 +5,20 @@ RUN git fetch origin
 RUN git branch -av
 RUN git checkout ${BASE_COMMIT}
 
-#COPY ./kernel.config /src/.config
-RUN make defconfig && \
-  make kvm_guest.config && \
-  ./scripts/config --module CONFIG_BTRFS_FS && \
-  make olddefconfig
+# Baseline config for running in a VM
+RUN make defconfig && make kvm_guest.config
+
+# Additional modules needed for Fedora bootc / bcvk
+RUN \
+  ./scripts/config --module CONFIG_FUSE_FS && \
+  ./scripts/config --module CONFIG_OVERLAY_FS && \
+  ./scripts/config --module CONFIG_VIRTIO_FS && \
+  ./scripts/config --module CONFIG_VIRTIO_VSOCKETS && \
+  ./scripts/config --module CONFIG_VSOCKETS
+
+# Modules I wish to do development with.
+RUN \
+  ./scripts/config --module CONFIG_BTRFS_FS
+
+RUN make olddefconfig
 
