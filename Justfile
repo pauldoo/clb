@@ -2,6 +2,9 @@
 #base_commit := "05f7e89ab9731565d8a62e3b5d1ec206485eeb0b"
 # 2025-02-14: btrfs-devel/master
 #base_commit := "44331bd6a610"
+# 2025-02-16: btrfs-devel/misc-next
+#base_commit := "f48d2006cea"
+
 
 default:
     just --list
@@ -50,7 +53,7 @@ bootable base_commit target_commit: (pkg_build base_commit target_commit) bootab
 run base_commit target_commit: (bootable base_commit target_commit)
     bcvk ephemeral run-ssh clb_bootable_{{target_commit}}
 
-run_debug base_commit target_commit:
+run_console base_commit target_commit: (bootable base_commit target_commit)
     bcvk ephemeral run --console clb_bootable_{{target_commit}}
 
 bootable_base:

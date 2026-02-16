@@ -18,3 +18,12 @@ RUN dnf install -y \
   micro \
   tmux \
   screen
+
+#COPY root_authorized_keys /usr/lib/ssh/root_authorized_keys
+#RUN mkdir -p /usr/lib/tmpfiles.d
+#RUN cat > /usr/lib/tmpfiles.d/root-ssh.conf <<'EOF'
+#d /var/roothome/.ssh 0700 root root -
+#C /var/roothome/.ssh/authorized_keys 0600 root root - /usr/lib/ssh/root_authorized_keys
+#EOF
+
+#RUN echo "PermitRootLogin prohibit-password" > /etc/ssh/sshd_config.d/90-allow-root.conf
