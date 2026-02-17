@@ -1,9 +1,9 @@
 ARG BASE_COMMIT
 FROM clb_base_build_${BASE_COMMIT}
-RUN git fetch origin
-RUN git status
+# Intentionally echo here, before `git fetch` as a form of cache busting.
 ARG TARGET_COMMIT
+RUN echo "Fetching to obtain commit: ${TARGET_COMMIT}"
+RUN git fetch origin
 RUN git checkout ${TARGET_COMMIT}
-RUN git status
 RUN make -j$(($(nproc) - 1)) binrpm-pkg
 
