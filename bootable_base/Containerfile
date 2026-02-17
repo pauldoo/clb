@@ -1,8 +1,10 @@
 FROM quay.io/fedora/fedora-bootc:latest
 
 # Workaround...
-# "05-rpmostree.install" runs before depmod, then fails because
-# modules.dep hasn't been created.
+# When installing a kernel RPM, "05-rpmostree.install" runs before depmod,
+# then fails because modules.dep hasn't been created yet.
+# Simply link the depmod step so it runs first. It will run again after
+# the rpmostree step - but that is harmless.
 RUN ln -s \
   /usr/lib/kernel/install.d/50-depmod.install \
   /usr/lib/kernel/install.d/01-depmod.install
@@ -14,16 +16,10 @@ RUN dnf remove -y \
   kernel-modules \
   kernel-modules-core
 
+# Some niceties.
 RUN dnf install -y \
+  fish \
   micro \
   tmux \
   screen
 
-#COPY root_authorized_keys /usr/lib/ssh/root_authorized_keys
-#RUN mkdir -p /usr/lib/tmpfiles.d
-#RUN cat > /usr/lib/tmpfiles.d/root-ssh.conf <<'EOF'
-#d /var/roothome/.ssh 0700 root root -
-#C /var/roothome/.ssh/authorized_keys 0600 root root - /usr/lib/ssh/root_authorized_keys
-#EOF
-
-#RUN echo "PermitRootLogin prohibit-password" > /etc/ssh/sshd_config.d/90-allow-root.conf
