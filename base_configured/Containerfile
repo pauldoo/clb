@@ -8,8 +8,11 @@ RUN git checkout ${BASE_COMMIT}
 # Baseline config for running in a VM
 RUN make defconfig && make kvm_guest.config
 
-# Additional modules needed for Fedora bootc / bcvk
+# Additional options and modules needed for Fedora bootc / bcvk
 RUN \
+  ./scripts/config --enable CONFIG_DMI_SYSFS && \
+  ./scripts/config --enable CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK && \
+  ./scripts/config --enable CONFIG_USER_NS && \
   ./scripts/config --module CONFIG_FUSE_FS && \
   ./scripts/config --module CONFIG_FW_CFG_SYSFS && \
   ./scripts/config --module CONFIG_OVERLAY_FS && \

@@ -51,7 +51,7 @@ bootable base_commit target_commit: (pkg_build base_commit target_commit) bootab
         --build-arg TARGET_COMMIT={{target_commit}} \
 
 run base_commit target_commit: (bootable base_commit target_commit)
-    bcvk ephemeral run-ssh clb_bootable_{{target_commit}}
+    bcvk ephemeral run-ssh --bind ./project:project clb_bootable_{{target_commit}}
 
 run_console base_commit target_commit: (bootable base_commit target_commit)
     bcvk ephemeral run --console clb_bootable_{{target_commit}}
