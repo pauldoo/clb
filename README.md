@@ -11,11 +11,13 @@ Built kernels can be installed to a Fedora bootable container, and booted locall
 * podman
 * bcvk
 * Just
-* Linux kernel source code checked out into `./linux`.
+* Linux kernel source code checked out into `./linux`
 
 # Usage
 
-Build a kernel from clean for the specified commit (must be on a local branch):
+The commits you wish to test must be part of a _local_ branch of the Linux code you have checked out. This is because only your local branches are cloned into the containers.
+
+Build a kernel from clean for the specified commit:
 ```
 just clean_build <commit>
 ```
@@ -30,9 +32,30 @@ After you have either type of build done, login to a bootable container running 
 just run <commit>
 ```
 
-## Workflow
+## Suggested Workflow
 
 Perform a clean build for the base of your work (`just clean_build`). As you iterate and make new commits, use incremental builds to build new test kernels (`just incremental_build`), and boot them for testing using `just run`.
 
 Each test produces a new bootable container image. These are independent and can be booted simultaneously or retained to revisit later. 
 
+## Example
+
+Build 7.0-rc5:
+```
+just clean_build c369299895
+```
+
+Run it:
+```
+just run c369299895
+```
+
+Later, we build 7.0-rc6 as an incremental build:
+```
+just incremental_build c369299895 7aaa8047ea
+```
+
+Then run it:
+```
+just run 7aaa8047ea
+```
