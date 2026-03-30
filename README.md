@@ -1,21 +1,38 @@
 # Containerised Linux Build (CLB)
 
-Build Linux kernels and boot them in Fedora bootc VMs. Cache a baseline build so that incremental builds are fast(er).
+Container based workflow for building Linux kernels then booting them in Fedora bootable containers for testing.
 
-Prerequisites:
+Builds take place inside Fedora container images and build artifacts are retained there. Builds can be clean, or incremental using a previous build as a starting point (faster than a clean build).
+
+Built kernels can be installed to a Fedora bootable container, and booted locally using bcvk. Because all builds and bootable containers are independent of the working tree it is possible to easily switch between builds while testing.
+
+# Prerequisites
+
 * podman
 * bcvk
+* Just
 * Linux kernel source code checked out into `./linux`.
 
-Usage:
+# Usage
+
+Build a kernel from clean for the specified commit (must be on a local branch):
 ```
-just run <base commit> <test commit>
+just clean_build <commit>
 ```
 
-`base commit`: Try to keep this consistent over multiple runs. On first run a build is performed using this commit, and the build artifacts are stored as an image. It could be the base commit for your branch.
+Build a kernel incrementally (set `base commit` to any previous build):
+```
+just incremental_build <base commit> <new commit>
+```
 
-`test commit`: The commit to actually boot. Can be the same as the base commit. The build will start from the image of the base commit (which is prebuilt), update to the new commit, and do an incremental build.
+After you have either type of build done, login to a bootable container running a kernel:
+```
+just run <commit>
+```
 
-As you develop your linux kernel change and make new commits to your branch or amend them, rerun `just run` and change only the test commit argument. The builds will be mostly incremental since they start from the cached build of the base commit. After making a small commit to the linux source tree, on my 2019 laptop it takes ~3 minutes for `just run` to perform the incremental build, create a new bootc image with the kernel installed, boot it, and show the logged-in terminal.
+## Workflow
 
-Each test produces a new bootable container image. These are independent and can be booted simultaneously or retained to revisit later.
+Perform a clean build for the base of your work (`just clean_build`). As you iterate and make new commits, use incremental builds to build new test kernels (`just incremental_build`), and boot them for testing using `just run`.
+
+Each test produces a new bootable container image. These are independent and can be booted simultaneously or retained to revisit later. 
+
