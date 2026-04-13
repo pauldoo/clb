@@ -6,4 +6,4 @@ RUN echo "Fetching to obtain commit: ${TARGET_COMMIT}"
 RUN git fetch origin
 RUN git checkout ${TARGET_COMMIT}
 RUN rm -rvf /src/rpmbuild 
-RUN make -j$(($(nproc) - 1)) binrpm-pkg
+RUN make -j$(nproc) binrpm-pkg

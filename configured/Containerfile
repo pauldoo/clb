@@ -24,7 +24,10 @@ RUN \
 
 # Modules I wish to do development with.
 RUN \
-  ./scripts/config --module CONFIG_BTRFS_FS
+  ./scripts/config --module CONFIG_BTRFS_FS && \
+  ./scripts/config --enable CONFIG_BTRFS_ASSERT && \
+  ./scripts/config --enable CONFIG_BTRFS_DEBUG && \
+  ./scripts/config --enable CONFIG_BTRFS_FS_RUN_SANITY_TESTS
 
 RUN make olddefconfig
 

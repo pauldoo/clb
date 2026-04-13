@@ -35,7 +35,7 @@ configured base_commit: cloneenv
 # Image with linux commit checked out, configured, and built. Not incremental.
 clean_build base_commit: (configured base_commit)
     podman image exists clb_build_{{base_commit}} || \
-    podman build clean_build \
+    nice podman build clean_build \
         --tag clb_build_{{base_commit}} \
         --build-arg BASE_COMMIT={{base_commit}}
 
@@ -43,7 +43,7 @@ clean_build base_commit: (configured base_commit)
 incremental_build base_commit target_commit:
     podman image exists clb_build_{{base_commit}}
     podman image exists clb_build_{{target_commit}} || \
-    podman build incremental_build \
+    nice podman build incremental_build \
         --tag clb_build_{{target_commit}} \
         --build-arg BASE_COMMIT={{base_commit}} \
         --build-arg TARGET_COMMIT={{target_commit}} \
